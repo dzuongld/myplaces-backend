@@ -32,13 +32,18 @@ const USERS = [
 const getUsers = async (req, res, next) => {
     let users
     try {
-        users = await User.find({}, 'email name') // alternative: '-password'
+        // alternative: 'email name'
+        users = await User.find({}, '-password')
     } catch (error) {
         const e = new HttpError('Failed in fetching users', 500)
         return next(e)
     }
 
-    res.json({ users })
+    res.json({
+        users: users.map((user) => {
+            return user.toObject({ getters: true })
+        }),
+    })
 }
 
 const createUser = async (req, res, next) => {
@@ -79,7 +84,7 @@ const createUser = async (req, res, next) => {
         return next(error)
     }
 
-    res.status(201).json({ user: createdUser })
+    res.status(201).json({ user: createdUser.toObject({ getters: true }) })
 }
 
 const loginUser = async (req, res, next) => {
@@ -98,7 +103,7 @@ const loginUser = async (req, res, next) => {
         return next(e)
     }
 
-    res.json({ message: 'Logged in' })
+    res.json({ message: 'Logged in', user: user.toObject({ getters: true }) })
 }
 
 // individual export in Node

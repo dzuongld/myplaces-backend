@@ -53,8 +53,7 @@ const getPlaceById = async (req, res, next) => {
     }
 
     // add id as string to returned object
-    // res.json({ place: place.toObject({ getters: true }) })
-    res.json({ place })
+    res.json({ place: place.toObject({ getters: true }) })
 }
 
 const getPlacesByUserId = async (req, res, next) => {
@@ -69,11 +68,15 @@ const getPlacesByUserId = async (req, res, next) => {
         return next(error)
     }
 
-    if (!places || places.length === 0) {
-        return next(new HttpError('Could not find places for this user', 404)) // different way than throw
-    }
+    // if (!places || places.length === 0) {
+    //     return next(new HttpError('Could not find places for this user', 404)) // different way than throw
+    // }
 
-    res.json({ places })
+    res.json({
+        places: places.map((place) => {
+            return place.toObject({ getters: true })
+        }),
+    })
 
     // * alternative: use populate()
     // let places
@@ -114,7 +117,8 @@ const createPlace = async (req, res, next) => {
             lat: coordinates[1],
         },
         address,
-        image: 'url',
+        image:
+            'https://cropper.watch.aetnd.com/public-content-aetn.video.aetnd.com/video-thumbnails/AETN-History_VMS/21/202/tdih-may01-HD.jpg?w=1440',
         creator,
     })
 
@@ -154,7 +158,7 @@ const createPlace = async (req, res, next) => {
         return next(error)
     }
 
-    res.status(201).json({ place: createdPlace })
+    res.status(201).json({ place: createdPlace.toObject({ getters: true }) })
 }
 
 const editPlace = async (req, res, next) => {
@@ -186,7 +190,7 @@ const editPlace = async (req, res, next) => {
         return next(error)
     }
 
-    res.status(200).json({ place })
+    res.status(200).json({ place: place.toObject({ getters: true }) })
 }
 
 const deletePlace = async (req, res, next) => {
