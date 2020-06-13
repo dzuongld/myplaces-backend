@@ -1,3 +1,5 @@
+const fs = require('fs')
+
 const mongoose = require('mongoose')
 const { validationResult } = require('express-validator')
 const getCoords = require('../utils/location')
@@ -117,8 +119,7 @@ const createPlace = async (req, res, next) => {
             lat: coordinates[1],
         },
         address,
-        image:
-            'https://cropper.watch.aetnd.com/public-content-aetn.video.aetnd.com/video-thumbnails/AETN-History_VMS/21/202/tdih-may01-HD.jpg?w=1440',
+        image: req.file.path,
         creator,
     })
 
@@ -223,6 +224,12 @@ const deletePlace = async (req, res, next) => {
 
             await session.commitTransaction()
         }
+
+        // remove photo
+        const imagePath = place.image
+        fs.unlink(imagePath, (err) => {
+            console.log(err)
+        })
     } catch (error) {
         const e = new HttpError('Cannot delete place', 500)
         return next(e)

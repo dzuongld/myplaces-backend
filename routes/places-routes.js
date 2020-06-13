@@ -2,6 +2,7 @@ const express = require('express')
 const { check } = require('express-validator')
 
 const placesController = require('../controllers/places-controllers')
+const fileUpload = require('../middleware/file-upload')
 
 const router = express.Router()
 
@@ -16,6 +17,7 @@ router.get('/user/:uid', placesController.getPlacesByUserId)
 // middlewares are executed left to right
 router.post(
     '/',
+    fileUpload.single('image'),
     [
         check('title').not().isEmpty(),
         check('description').isLength({ min: 5 }),

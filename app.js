@@ -1,3 +1,6 @@
+const fs = require('fs')
+const path = require('path')
+
 const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
@@ -11,6 +14,9 @@ const port = process.env.PORT || 5000
 
 // extract request to JS object
 app.use(bodyParser.json())
+
+// by default files in the backend are not accessible
+app.use('/uploads/images', express.static(path.join('uploads', 'images')))
 
 // enable CORS
 app.use((req, res, next) => {
@@ -39,6 +45,14 @@ app.use((req, res, next) => {
 // when providing 4 args, express wil recognize as default error handler
 // only execute when an error is thrown
 app.use((error, req, res, next) => {
+    // 'file' is added by Multer
+    // remove file if there is an error
+    if (req.file) {
+        fs.unlink(req.file.path, (err) => {
+            console.log(err)
+        })
+    }
+
     // special property - response headers have been sent
     if (res.headerSent) {
         return next(error)

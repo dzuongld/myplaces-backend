@@ -73,7 +73,7 @@ const createUser = async (req, res, next) => {
         email,
         name,
         password,
-        image: 'url',
+        image: req.file.path,
         places: [],
     })
 
