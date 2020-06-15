@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 
 const express = require('express')
+const cors = require('cors')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 
@@ -11,12 +12,6 @@ const usersRoutes = require('./routes/users-routes')
 
 const app = express()
 const port = process.env.PORT || 5000
-
-// extract request to JS object
-app.use(bodyParser.json())
-
-// by default files in the backend are not accessible
-app.use('/uploads/images', express.static(path.join('uploads', 'images')))
 
 // enable CORS
 app.use((req, res, next) => {
@@ -29,6 +24,14 @@ app.use((req, res, next) => {
 
     next()
 })
+
+// app.use(cors())
+
+// extract request to JS object
+app.use(bodyParser.json())
+
+// by default files in the backend are not accessible
+// app.use('/uploads/images', express.static(path.join('uploads', 'images')))
 
 // only use place routes when url starts wih /api/places
 app.use('/api/places', placesRoutes)
