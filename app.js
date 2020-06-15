@@ -31,7 +31,7 @@ app.use(cors())
 app.use(bodyParser.json())
 
 // by default files in the backend are not accessible
-app.use('/uploads/images', express.static(path.join('uploads', 'images')))
+// app.use('/uploads/images', express.static(path.join('uploads', 'images')))
 
 // only use place routes when url starts wih /api/places
 app.use('/api/places', placesRoutes)
