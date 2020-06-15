@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 
 const express = require('express')
+const cors = require('cors')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 
@@ -19,16 +20,18 @@ app.use(bodyParser.json())
 app.use('/uploads/images', express.static(path.join('uploads', 'images')))
 
 // enable CORS
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*')
-    res.setHeader(
-        'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-    )
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE')
+// app.use((req, res, next) => {
+//     res.setHeader('Access-Control-Allow-Origin', '*')
+//     res.setHeader(
+//         'Access-Control-Allow-Headers',
+//         'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+//     )
+//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE')
 
-    next()
-})
+//     next()
+// })
+
+app.use(cors())
 
 // only use place routes when url starts wih /api/places
 app.use('/api/places', placesRoutes)
